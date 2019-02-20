@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.water_management.modules.dao.sys.DictSetDao">
+
+    <resultMap id="dicSetMap" type="com.qh.water_management.modules.entity.sys.DictionaryCate">
+        <id property="id" column="id"/>
+        <result property="text" column="text"/>
+        <result property="code" column="code"/>
+        <result property="value" column="value"/>
+        <result property="sort" column="sort"/>
+        <result property="remark" column="remark"/>
+        <result property="createId" column="createId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateId" column="updateId"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="creatorOrgId" column="creatorOrgId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, text, code,  `value`, sort, remark, createId, createTime, updateId, updateTime, creatorOrgId
+    </sql>
+
+    <select id="queryList" parameterType="map" resultMap="dicSetMap">
+        select <include refid="Base_Column_List"/> from sys_data_dict_cate
+        where 1=1
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+        <if test="advanceFilter != null and advanceFilter != ''">
+            ${advanceFilter}
+        </if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from sys_data_dict_cate where 1=1
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+    </select>
+
+    <select id="getDicItemByCode" resultType="java.util.Map">
+        select a.* from sys_data_dict_dtl as a
+        left join sys_data_dict_cate as b on a.puuid = b.id
+        where b.code = #{code}
+    </select>
+
+    <insert id="save" parameterType="com.qh.water_management.modules.entity.sys.DictionaryCate">
+        insert into sys_data_dict_cate (id, text, code, `value`, sort, remark, createId, updateId, createTime, updateTime, creatorOrgId)
+        values(#{id}, #{text}, #{code}, #{value}, #{sort}, #{remark}, #{createId}, #{updateId}, #{createTime}, #{updateTime}, #{creatorOrgId})
+    </insert>
+
+   <update id="update" parameterType="com.qh.water_management.modules.entity.sys.DictionaryCate">
+       update sys_data_dict_cate
+       <set>
+           <if test="text != null">text = #{text},</if>
+           <if test="code != null">code = #{code},</if>
+           <if test="value != null">`value` = #{value},</if>
+           <if test="sort != null">sort = #{sort},</if>
+           <if test="remark != null">remark = #{remark},</if>
+           <if test="updateId != null">updateId = #{updateId},</if>
+           <if test="updateTime != null">updateTime = #{updateTime}</if>
+       </set>
+       where id = #{id}
+   </update>
+
+    <delete id="delete">
+        delete from sys_data_dict_cate where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,215 @@
+<input type="hidden" id="id" name="id">
+<input type="hidden" name="password">
+<div class="topjui-fluid">
+    <fieldset>
+        <legend>基本信息</legend>
+    </fieldset>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">用户名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="loginName" data-toggle="topjui-textbox"
+                       data-options="required:true,prompt:'必填'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">姓名</label>
+            <div class="topjui-input-block">
+                <input type="text" name="userName" data-toggle="topjui-textbox"
+                       data-options="required:true,prompt:'必填'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">性别</label>
+            <div class="topjui-input-block">
+                <div data-toggle="topjui-radio">
+                    <input type="radio" id="radio1" name="sex" label="男" value="1" checked="checked">
+                    <input type="radio" id="radio2" name="sex" label="女" value="2">
+                </div>
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">年龄</label>
+            <div class="topjui-input-block">
+                <input type="text" name="age" data-toggle="topjui-numberbox"data-options="groupSeparator:''">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">所属机构</label>
+            <div class="topjui-input-block">
+                <input type="hidden" name="orgName">
+                <input type="text" name="orgId"
+                       data-toggle="topjui-combotree"
+                       data-options="required:true,
+                   prompt:'必填',
+                   url:'/mdata/organization/getListByLevelId?levelId=1',
+                   expandUrl:'/mdata/organization/getListByParentId?parentId={id}',
+                   getFatherIdsUrl:'/mdata/organization/getFatherIds?id={id}',
+                   param:'orgName:text'">
+            </div>
+        </div>
+
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">职务</label>
+            <div class="topjui-input-block">
+                <input type="hidden" name="postText">
+                <input type="text" name="post"
+                       data-toggle="topjui-combobox"
+                       data-options="required:true,
+                       valueField: 'id',
+                   prompt:'必填',
+                   panelHeight:190,
+                   url:'/system/dicSet/getDicItemByCode?code=post',
+                   param:'postText:text'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">固定电话</label>
+            <div class="topjui-input-block">
+                <input type="text" name="telephone" data-toggle="topjui-textbox">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">电子邮箱</label>
+            <div class="topjui-input-block">
+                <input type="text" name="email" data-toggle="topjui-textbox" data-options="required:true,validType:'email',prompt:'必填'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">手机</label>
+            <div class="topjui-input-block">
+                <input type="text" name="cellphone" data-toggle="topjui-textbox" data-options="required:true,validType:'cellphone',prompt:'必填'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">角色授权</label>
+            <div class="topjui-input-block">
+                <input type="text" name="userGroup"
+                       data-toggle="topjui-combotree"
+                       data-options="required:true,
+                       prompt:'必填',
+                       multiple:true,
+                       url:'/system/authGroup/getListByLevelId?levelId=1',
+                       expandUrl:'/system/authGroup/getListByParentId?parentId={id}',
+                       expandAll:true,
+                       onlyLeafCheck:true,">
+            </div>
+        </div>
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">数据授权</label>
+            <div class="topjui-input-block">
+                <input type="text" name="dataAuth"
+                       data-toggle="topjui-combotree"
+                       data-options="required:true,
+                       prompt:'必填',
+                       multiple:true,
+                       url:'/system/sysAuthData/getListByLevelId?levelId=1',
+                       expandUrl:'/system/sysAuthData/getListByParentId?parentId={id}',expandAll:true
+                      ">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status"
+                       data-toggle="topjui-combobox"
+                       data-options="required:true,
+                   prompt:'必填',
+                   panelHeight:63,
+                   url:'/system/dicSet/getDicItemByCode?code=en-disable',
+                   param:'status:text'">
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend>其它信息</legend>
+    </fieldset>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">所属区域</label>
+            <div class="topjui-input-block">
+                <input type="text" name="zone"
+                       data-toggle="topjui-combotree"
+                       data-options="required:true,
+                   prompt:'必填',
+                   url:'/system/codeItem/getListByCodeSetIdAndLevelId?codeSetId=AGA&levelId=3',
+				   expandUrl:'/system/codeItem/getListByParentId?parentId={id}',
+                   getFatherIdsUrl:'/system/codeItem/getFatherIds?uuid={id}',
+                   backfill:{url:'/system/codeItem/getZoneFillbackData?id={id}'}">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">国家</label>
+            <div class="topjui-input-block">
+                <input type="text" name="country" data-toggle="topjui-textbox" data-options="readonly:true">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">省份</label>
+            <div class="topjui-input-block">
+                <input type="text" name="province" data-toggle="topjui-textbox" data-options="readonly:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">城市</label>
+            <div class="topjui-input-block">
+                <input type="text" name="city" data-toggle="topjui-textbox" data-options="readonly:true">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">区县</label>
+            <div class="topjui-input-block">
+                <input type="text" name="district" data-toggle="topjui-textbox" data-options="readonly:true">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">籍贯</label>
+            <div class="topjui-input-block">
+                <input type="text" name="nativePlace" data-toggle="topjui-combobox"
+                       data-options="url:'/system/codeItem/getListByCodeSetIdAndLevelId?codeSetId=AAAC&levelId=5',panelHeight:'250',textField:'text',valueField:'text'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">民族</label>
+            <div class="topjui-input-block">
+                <input type="text" name="nation" data-toggle="topjui-combobox"
+                       data-options="url:'/system/codeItem/getListByCodeSetIdAndLevelId?codeSetId=AAAB&levelId=5',panelHeight:'250',textField:'text',valueField:'text'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">身份证号</label>
+            <div class="topjui-input-block">
+                <input type="text" name="idCard" data-toggle="topjui-textbox">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">毕业院校</label>
+            <div class="topjui-input-block">
+                <input type="text" name="school" data-toggle="topjui-textbox">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">学历</label>
+            <div class="topjui-input-block">
+                <input type="text" id="education" name="education" data-toggle="topjui-combobox"
+                       data-options="url:'/system/codeItem/getListByCodeSetIdAndLevelId?codeSetId=AABA&levelId=5',textField:'text',valueField:'text'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">学位</label>
+            <div class="topjui-input-block">
+                <input type="text" id="degree" name="degree" data-toggle="topjui-combobox"
+                       data-options="url:'/system/codeItem/getListByCodeSetIdAndLevelId?codeSetId=AABB&levelId=5',textField:'text',valueField:'text'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">备注</label>
+            <div class="topjui-input-block">
+                <input type="text" name="remark" data-toggle="topjui-textarea">
+            </div>
+        </div>
+
+    </div>
+</div>

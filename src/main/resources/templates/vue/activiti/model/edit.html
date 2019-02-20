@@ -1,0 +1,45 @@
+<input type="hidden" id="id" name="id">
+<div class="topjui-fluid">
+    <fieldset>
+        <legend>模型信息</legend>
+    </fieldset>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">模型名称</label>
+            <div class="topjui-input-block">
+                <input type="text" name="name" data-toggle="topjui-textbox"
+                       data-options="prompt:'模型名称',required:true">
+            </div>
+        </div>
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">模型key</label>
+            <div class="topjui-input-block">
+                <input type="text" name="actKey" data-toggle="topjui-textbox"
+                       data-options="prompt:'模型key',required:true">
+            </div>
+        </div>
+    </div>
+
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">业务</label>
+            <div class="topjui-input-block">
+                <input type="text" name="extendActBusinessId"
+                       data-toggle="topjui-combotree"
+                       data-options="required:true,
+                   panelHeight:250,
+                   expandAll:false,
+                   url:'/act/bus/getListByActKeyAndLevelId?actKey=root&levelId=1',
+                   expandUrl:'/act/bus/getListByParentId?parentId={id}',
+                   getFatherIdsUrl:'/act/bus/getFatherIds?uuid={id}'"/>
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">描述</label>
+            <div class="topjui-input-block">
+                <input type="text" name="description" data-toggle="topjui-textarea"
+                       data-options="prompt:'描述'">
+            </div>
+        </div>
+    </div>
+</div>

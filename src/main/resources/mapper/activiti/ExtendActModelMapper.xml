@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.water_management.modules.dao.activiti.ExtendActModelDao">
+
+    <resultMap id="extendActModelMap" type="com.qh.water_management.modules.entity.activiti.ExtendActModelEntity">
+        <id property="id" column="id"/>
+        <result property="actVersion" column="actVersion"/>
+        <result property="extendActBusinessId" column="extendActBusinessId"/>
+        <result property="deploymentId" column="deploymentId"/>
+        <result property="description" column="description"/>
+        <result property="modelId" column="modelId"/>
+        <result property="name" column="name"/>
+        <result property="status" column="status"/>
+        <result property="businessName" column="businessName"/>
+        <result property="instanceId" column="instanceId"/>
+        <result property="defId" column="defId"/>
+        <result property="startTime" column="startTime"/>
+        <result property="startUserId" column="startUserId"/>
+        <result property="createId" column="createId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateId" column="updateId"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="creatorOrgId" column="creatorOrgId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, actVersion, extendActBusinessId, deploymentId, description, modelId, name, status,
+        instanceId, defId, startTime, startUserId, createId, createTime, updateId, updateTime, creatorOrgId
+    </sql>
+
+    <select id="queryList" parameterType="map" resultMap="extendActModelMap">
+        select <include refid="Base_Column_List"/>, (select text from extend_act_business as a where a.id = auth.extendActBusinessId) as businessName
+        from extend_act_model auth
+        where 1=1
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+        <if test="advanceFilter != null and advanceFilter != ''">
+            ${advanceFilter}
+        </if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" parameterType="map" resultType="int">
+        select count(*) from extend_act_model where 1=1
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+        <if test="advanceFilter != null and advanceFilter != ''">
+            ${advanceFilter}
+        </if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getDetailByUuid" parameterType="string" resultType="map">
+        select <include refid="Base_Column_List"/> from extend_act_model where id = #{uuid}
+    </select>
+
+    <select id="queryObject" resultType="com.qh.water_management.modules.entity.activiti.ExtendActModelEntity" resultMap="extendActModelMap">
+        select <include refid="Base_Column_List"/>, (select text from extend_act_business as a where a.id = auth.extendActBusinessId) as businessName
+        from extend_act_model auth  where auth.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.qh.water_management.modules.entity.activiti.ExtendActModelEntity">
+        insert into extend_act_model (id, actVersion, extendActBusinessId, deploymentId, description, modelId, name, status, businessName, code, instanceId, defId, startTime, startUserId, createId, createTime, updateId, updateTime, creatorOrgId)
+        values(#{id}, #{actVersion}, #{extendActBusinessId}, #{deploymentId}, #{description}, #{modelId}, #{name}, #{status}, #{businessName}, #{code}, #{instanceId}, #{defId}, #{startTime}, #{startUserId}, #{createId}, #{createTime}, #{updateId}, #{updateTime}, #{creatorOrgId})
+    </insert>
+
+    <update id="update" parameterType="com.qh.water_management.modules.entity.activiti.ExtendActModelEntity">
+        update extend_act_model
+        <set>
+            <if test="actVersion != null">actVersion = #{actVersion},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="updateId != null">updateId = #{updateId},</if>
+            <if test="updateTime != null">updateTime = #{updateTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

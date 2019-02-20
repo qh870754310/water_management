@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>流程模型</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- 浏览器标签图片 -->
+    <link rel="shortcut icon" th:href="@{/favicon.ico}"/>
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.core.min.css}" rel="stylesheet"/>
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.blue.css}" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" th:href="@{/resource/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.cookie.js}"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/topjui.config.js}"></script>
+    <script type="text/javascript" th:inline="none">
+        /*<![CDATA[*/
+        if (window.location.pathname == "/index") myConfig.config.mainPage = true;
+        /*]]>*/
+    </script>
+    <!-- TopJUI框架核心 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/topjui.core.min_demo.js}"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/locale/topjui.lang.zh_CN.js}"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/resource/plugins/layui/layui.js}"></script>
+</head>
+
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'center', iconCls:'icon-reload', title:'', split:true, border:false, bodyCls:'border_right', width:'100%'">
+        <!-- treegrid表格 -->
+        <table data-toggle="topjui-datagrid"
+               data-options="id:'actModelDatagrid',
+                idField:'id',
+                multiple:'false',
+                treeField:'text',
+                url:'/act/model/getPageSetData'
+                ">
+            <thead>
+            <tr>
+                <th data-options="field:'id', title:'UUID', checkbox:true"></th>
+                <th data-options="field:'name', title:'名称'"></th>
+                <th data-options="field:'businessName', title:'类型'"></th>
+                <th data-options="field:'createTime', title:'创建日期'"></th>
+                <th data-options="field:'status', title:'状态', formatter:function(value, row, index){
+                            if (value == '1'){
+                                return '<span style=\'color:green\'>启用</span>';
+                            } else if (value == '0') {
+                                return '<span style=\'color:red\'>禁用</span>';
+                            } else {
+                                return '';
+                            }
+                        }"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<!-- 表格工具栏 -->
+<div id="actModelDatagrid-toolbar" class="topjui-toolbar"
+     data-options="grid:{
+           type:'datagrid',
+           id:'actModelDatagrid'
+       }" style="display:none">
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+       extend:'#actModelDatagrid-toolbar',
+       btnCls:'topjui-btn-green',
+       dialog:{
+           id:'actModelAddDialog',
+           href:'/act/model/edit',
+           buttonsGroup:[
+               {text:'保存',url:'/act/model/save',iconCls:'fa fa-plus',handler:'ajaxForm'}
+           ]
+       }">新增</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+           extend:'#actModelDatagrid-toolbar',
+           btnCls:'topjui-btn-blue',
+           component:'edit',
+           iconCls:'fa fa-pencil',
+           dialog:{
+               id:'actModelAddDialog',
+               href:'/act/model/edit',
+               url:'/act/model/getDetailByUuid?uuid={id}',
+               height:450,
+               buttonsGroup:[
+                   {text:'更新',url:'/act/model/update',iconCls:'fa fa-save',handler:'ajaxForm',refresh:[{type:'datagrid',id:'matRepertoryDg'}]}
+               ]
+           }">编辑</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+           extend:'#actModelDatagrid-toolbar',
+           btnCls:'topjui-btn-red',
+	       iconCls:'fa fa-trash',
+	       grid:{uncheckedMsg:'请先勾选要删除的用户',param:'uuid:id'},
+	       url:'/act/model/delete'">删除</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'filter',
+       extend:'#actModelDatagrid-toolbar',
+       btnCls:'topjui-btn-orange'">过滤</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend:'#actModelDatagrid-toolbar',
+       btnCls:'topjui-btn-purple'">查询</a>
+</div>
+</body>
+</html>

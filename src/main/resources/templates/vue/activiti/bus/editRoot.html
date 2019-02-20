@@ -1,0 +1,75 @@
+<input type="hidden" id="id" name="id">
+<input type="hidden" name="levelId">
+<input type="hidden" name="parentId" value="1">
+<input type="hidden" name="creatorOrgId">
+<div class="topjui-fluid">
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">业务名称</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textbox" data-options="required:true" name="text">
+            </div>
+        </div>
+        <div class="topjui-col-sm6">
+            <label class="topjui-form-label">流程key</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textbox" data-options="required:true" name="actKey">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">类型</label>
+            <div class="topjui-input-block">
+                <input type="text" name="type"
+                       data-toggle="topjui-combobox"
+                       data-options="required:true,
+                   panelHeight:63,
+               url:'/system/dicSet/getDicItemByCode?code=actBusType'">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">是否可展开</label>
+            <div class="topjui-input-block">
+                <input type="text" name="state"
+                       data-toggle="topjui-combobox"
+                       data-options="required:true,
+                       panelHeight:63,
+                   url:'/system/dicSet/getDicItemByCode?code=nodeState'">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">状态</label>
+            <div class="topjui-input-block">
+                <input type="text" name="status"
+                       data-toggle="topjui-combobox"
+                       data-options="required:true,
+                       panelHeight:63,
+                       url:'/system/dicSet/getDicItemByCode?code=en-disable'"/>
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">类路径</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textbox" data-options="required:true" name="classurl"/>
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm6"><label class="topjui-form-label">显示图标</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textbox" data-options="" name="iconCls">
+            </div>
+        </div>
+        <div class="topjui-col-sm6"><label class="topjui-form-label">指标排序</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-numberspinner" data-options="required:true" name="sort">
+            </div>
+        </div>
+    </div>
+    <div class="topjui-row">
+        <div class="topjui-col-sm12"><label class="topjui-form-label">备注</label>
+            <div class="topjui-input-block">
+                <input type="text" data-toggle="topjui-textarea" data-options="" name="remark">
+            </div>
+        </div>
+    </div>
+</div>
+

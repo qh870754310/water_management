@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EMIS快速开发平台</title>
+    <!-- 浏览器标签图片 -->
+    <link rel="shortcut icon" th:href="@{favicon.ico}" />
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.core.min.css}" rel="stylesheet"/>
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.blue.css}" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" th:href="@{/resource/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    <!-- layui框架样式 -->
+    <link type="text/css" th:href="@{/resource/plugins/layui/css/layui.css}" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.cookie.js}"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/topjui.config.js}"></script>
+    <script type="text/javascript">
+        if (window.location.pathname == "/index") myConfig.config.mainPage = true;
+    </script>
+    <!-- TopJUI框架核心-->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/topjui.core.min_demo.js}"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/locale/topjui.lang.zh_CN.js}"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/common.js}"></script>
+    <!-- layui框架js -->
+    <!--<script type="text/javascript" th:src="@{/resource/plugins/layui/layui.js}" charset="utf-8"></script>-->
+</head>
+
+<body>
+<div data-toggle="topjui-layout" data-options="fit:true">
+    <div data-options="region:'west',title:'',split:true,border:false,width:'20%',iconCls:'fa fa-sitemap',headerCls:'border_right',bodyCls:'border_right'">
+        <!-- treegrid表格 -->
+        <table data-toggle="topjui-treegrid"
+               data-options="id:'orgnizationDatagrid',
+                   idField:'id',
+                   treeField:'text',
+                   fitColumns:true,
+                   singleSelect:true,
+                   url:'/mdata/organization/getListByLevelId?levelId=1',
+                   expandUrl:'/mdata/organization/getListByParentId?parentId={id}',
+                   childGrid:{
+                    param:'codeSetId:codeSetId,id:id',
+                    grid:[
+                        {type:'datagrid',id:'userDatagrid'},
+                    ]
+                    }">
+            <thead>
+            <tr>
+                <th data-options="field:'id',title:'UUID',checkbox:true"></th>
+                <th data-options="field:'text',title:'机构名称',width:100"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div data-options="region:'center',iconCls:'icon-reload',title:'',split:true,border:false,bodyCls:'border_left'">
+        <!-- datagrid表格 -->
+        <table data-toggle="topjui-datagrid"
+               data-options="id:'userDatagrid',
+                    url:'/mdata/user/getPageSet',
+                    filter: [{
+                        field: 'userName',
+                        type: 'textbox',
+                        op: ['contains', 'equal', 'notequal', 'less', 'greater']
+                    },{
+                        field: 'sex',
+                        type: 'combobox',
+                        options: {
+                            valueField: 'value',
+                            textField: 'label',
+                            data: [{
+                                label: '男',
+                                value: '1'
+                            }, {
+                                label: '女',
+                                value: '2'
+                            }]
+                        },
+                        op: ['contains', 'equal', 'notequal', 'less', 'greater']
+                    },{
+                        field: 'post',
+                        type: 'combobox',
+                        options: {
+                            valueField: 'value',
+                            textField: 'label',
+                            multiple: true,
+                            data: [{
+                                label: 'CEO',
+                                value: 'CEO'
+                            }, {
+                                label: 'COO',
+                                value: 'COO'
+                            }, {
+                                label: 'CTO',
+                                value: 'CTO'
+                            }]
+                        },
+                        op: ['contains', 'equal', 'notequal', 'less', 'greater']
+                    }]">
+            <thead>
+            <tr>
+                <th data-options="field:'uuid',title:'UUID',checkbox:true"></th>
+                <th data-options="field:'loginName',title:'员工号',sortable:true"></th>
+                <th data-options="field:'userName',title:'姓名',sortable:true,width:100"></th>
+                <th data-options="field:'sex',title:'性别',sortable:true,width:50,
+                    formatter:function(value,row,index){
+                        if (value == '1') {
+                            return '男';
+                        } else if (value == '2') {
+                            return '女';
+                        } else {
+                            return '';
+                        }
+                    }"></th>
+                <th data-options="field:'telephone',title:'电话',sortable:true"></th>
+                <th data-options="field:'cellphone',title:'手机',sortable:true"></th>
+                <th data-options="field:'email',title:'电子邮箱',sortable:true"></th>
+                <th data-options="field:'orgName',title:'所属机构',sortable:true"></th>
+                <th data-options="field:'postText',title:'职务',sortable:true"></th>
+                <th data-options="field:'userGroup',title:'用户组',sortable:true"></th>
+                <th data-options="field:'status',title:'状态',sortable:true,sortable:true,formatter: function(value,row,index){
+                                                                    if(value == '1'){
+                                                                     return '<span style=\'color:green\'>启用</span>';
+                                                                    }
+                                                                    if (value == '0'){
+                                                                        return '<span style=\'color:red\'>禁用</span>';
+                                                                    }
+                                                                    }"></th>
+
+                <th data-options="field:'zone',title:'所属区域',sortable:true,hidden:true,formatter:function(value,row,index){return row.country+' '+row.province+' '+row.city+' '+row.district}"></th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+
+<!-- 用户 表格工具栏 -->
+<div id="userDatagrid-toolbar" class="topjui-toolbar"
+     data-options="grid:{
+           type:'datagrid',
+           id:'userDatagrid'
+       }" style="display:none">
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+           extend:'#userDatagrid-toolbar',
+           btnCls:'topjui-btn-green',
+           parentGrid:{
+               type:'treegrid',
+               id:'orgnizationDatagrid',
+               param:'orgId:id,orgName:text',
+               unselectedMsg:'请先选择左侧树形导航中的机构'
+           },
+           dialog:{
+               id:'userAddDialog',
+               href:'/mdata/user/edit',
+               height:450,
+               buttonsGroup:[
+                   {text:'保存',url:'/mdata/user/save',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'openDialog',
+           extend:'#userDatagrid-toolbar',
+           btnCls:'topjui-btn-blue',
+           component:'edit',
+           iconCls:'fa fa-pencil',
+           dialog:{
+               id:'userEditDialog',
+               href:'/mdata/user/edit',
+               url:'/mdata/user/getDetailByUuid?uuid={id}',
+               height:450,
+               buttonsGroup:[
+                   {text:'更新',url:'/mdata/user/update',iconCls:'fa fa-save',handler:'ajaxForm',refresh:[{type:'datagrid',id:'userDatagrid'}]}
+               ]
+           }">编辑</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'doAjax',
+           extend:'#userDatagrid-toolbar',
+           btnCls:'topjui-btn-red',
+	       iconCls:'fa fa-trash',
+	       grid:{uncheckedMsg:'请先勾选要删除的用户',param:'id:id'},
+	       url:'/mdata/user/delete'">删除</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'filter',
+       extend:'#userDatagrid-toolbar',
+       btnCls:'topjui-btn-orange'">过滤</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="method:'search',
+       extend:'#userDatagrid-toolbar',
+       btnCls:'topjui-btn-purple'">查询</a>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="menu:'#exportSubMenu',btnCls:'topjui-btn-blue',
+       hasDownArrow:true,
+       iconCls:'fa fa-file'">导出</a>
+    <div id="exportSubMenu" class="topjui-toolbar" style="width:150px;">
+        <!--<%&#45;&#45;<rbac:hasPermission name="/system/freemarker/generatePdf?uuid={uuid}">&#45;&#45;%>-->
+        <!--<%&#45;&#45;<div data-toggle="topjui-menubutton"&#45;&#45;%>-->
+        <!--<%&#45;&#45;data-options="method:'request',&#45;&#45;%>-->
+        <!--<%&#45;&#45;extend:'#userDatagrid-toolbar',&#45;&#45;%>-->
+        <!--<%&#45;&#45;iconCls:'fa fa-file-pdf-o',&#45;&#45;%>-->
+        <!--<%&#45;&#45;url:'/system/freemarker/generatePdf?uuid={uuid}',&#45;&#45;%>-->
+        <!--<%&#45;&#45;grid:{&#45;&#45;%>-->
+        <!--<%&#45;&#45;type:'datagrid',&#45;&#45;%>-->
+        <!--<%&#45;&#45;id:'userDatagrid'&#45;&#45;%>-->
+        <!--<%&#45;&#45;}">导出 PDF 报表&#45;&#45;%>-->
+        <!--<%&#45;&#45;</div>&#45;&#45;%>-->
+        <!--<%&#45;&#45;</rbac:hasPermission>&#45;&#45;%>-->
+        <!--<rbac:hasPermission name="/mdata/user/exportExcel">-->
+        <div data-toggle="topjui-menubutton"
+             data-options="method:'export',
+                 extend:'#userDatagrid-toolbar',
+                 iconCls:'fa fa-file-excel-o',
+                 grid:{
+                     type:'datagrid',
+                     id:'userDatagrid'
+                 }">导出EXCEL列表
+        </div>
+        <!--</rbac:hasPermission>-->
+        <!--<%&#45;&#45;<rbac:hasPermission name="/system/freemarker/generateExcel?uuid={uuid}">&#45;&#45;%>-->
+        <!--<%&#45;&#45;<div data-toggle="topjui-menubutton"&#45;&#45;%>-->
+        <!--<%&#45;&#45;data-options="method:'request',&#45;&#45;%>-->
+        <!--<%&#45;&#45;extend:'#userDatagrid-toolbar',&#45;&#45;%>-->
+        <!--<%&#45;&#45;iconCls:'fa fa-file-excel-o',&#45;&#45;%>-->
+        <!--<%&#45;&#45;url:'/system/freemarker/generateExcel?uuid={uuid}',&#45;&#45;%>-->
+        <!--<%&#45;&#45;grid:{&#45;&#45;%>-->
+        <!--<%&#45;&#45;type:'datagrid',&#45;&#45;%>-->
+        <!--<%&#45;&#45;id:'userDatagrid'&#45;&#45;%>-->
+        <!--<%&#45;&#45;}">导出EXCEL报表&#45;&#45;%>-->
+        <!--<%&#45;&#45;</div>&#45;&#45;%>-->
+        <!--<%&#45;&#45;</rbac:hasPermission>&#45;&#45;%>-->
+        <!--<%&#45;&#45;<rbac:hasPermission name="/system/freemarker/generateDoc?uuid={uuid}">&#45;&#45;%>-->
+        <!--<%&#45;&#45;<div data-toggle="topjui-menubutton"&#45;&#45;%>-->
+        <!--<%&#45;&#45;data-options="method:'request',&#45;&#45;%>-->
+        <!--<%&#45;&#45;extend:'#userDatagrid-toolbar',&#45;&#45;%>-->
+        <!--<%&#45;&#45;iconCls:'fa fa-file-word-o',&#45;&#45;%>-->
+        <!--<%&#45;&#45;url:'/system/freemarker/generateDoc?uuid={uuid}',&#45;&#45;%>-->
+        <!--<%&#45;&#45;grid:{&#45;&#45;%>-->
+        <!--<%&#45;&#45;type:'datagrid',&#45;&#45;%>-->
+        <!--<%&#45;&#45;id:'userDatagrid'&#45;&#45;%>-->
+        <!--<%&#45;&#45;}">导出WORD报表&#45;&#45;%>-->
+        <!--<%&#45;&#45;</div>&#45;&#45;%>-->
+        <!--<%&#45;&#45;<</rbac:hasPermission>&#45;&#45;%>-->
+    </div>
+    <a href="javascript:void(0)"
+       data-toggle="topjui-menubutton"
+       data-options="menu:'#moreSubMenu',
+       btnCls:'topjui-btn-orange',
+       hasDownArrow:true,
+       iconCls:'fa fa-list'">更多</a>
+    <div id="moreSubMenu" class="topjui-toolbar" style="width:100px;">
+        <div data-toggle="topjui-menubutton"
+             data-options="method:'doAjax',
+                 extend:'#userDatagrid-toolbar',
+                 iconCls:'fa fa-key',
+                 url:'/mdata/user/updatePassword',
+                 confirmMsg:'确定要重置该用户密码吗？重置后密码与用户名相同。',
+                 grid:{
+                     type:'datagrid',
+                     id:'userDatagrid',
+                     param:'id,password:loginName',
+                     unselectedMsg:'请先选中要重置密码的用户！'
+                 }">重置密码
+        </div>
+    </div>
+</div>
+<!-- 存放具体业务页面需要引入的javascript文件 -->
+
+<!--<script src="../../static/js/security/mainframe.js"-->
+<!--th:src="@{/js/security/mainframe.js}"></script>-->
+</body>
+</html>

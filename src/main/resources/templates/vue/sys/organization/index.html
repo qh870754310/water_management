@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>EMIS快速开发平台</title>
+    <!-- 浏览器标签图片 -->
+    <link rel="shortcut icon" th:href="@{favicon.ico}" />
+    <!-- TopJUI框架样式 -->
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.core.min.css}" rel="stylesheet"/>
+    <link type="text/css" th:href="@{/resource/plugins/topjui/themes/default/topjui.blue.css}" rel="stylesheet" id="dynamicTheme"/>
+    <!-- FontAwesome字体图标 -->
+    <link type="text/css" th:href="@{/resource/plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    <!-- layui框架样式 -->
+    <link type="text/css" th:href="@{/resource/plugins/layui/css/layui.css}" rel="stylesheet"/>
+    <!-- jQuery相关引用 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/resource/plugins/jquery/jquery.cookie.js}"></script>
+    <!-- TopJUI框架配置 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/topjui.config.js}"></script>
+    <script type="text/javascript">
+        if (window.location.pathname == "/index") myConfig.config.mainPage = true;
+    </script>
+    <!-- TopJUI框架核心-->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/topjui.core.min_demo.js}"></script>
+    <!-- TopJUI中文支持 -->
+    <script type="text/javascript" th:src="@{/resource/plugins/topjui/js/locale/topjui.lang.zh_CN.js}"></script>
+    <!-- 公共函数 -->
+    <script type="text/javascript" th:src="@{/resource/public/js/common.js}"></script>
+    <!-- layui框架js -->
+    <!--<script type="text/javascript" th:src="@{/resource/plugins/layui/layui.js}" charset="utf-8"></script>-->
+</head>
+
+<body>
+    <div data-toggle="topjui-layout" data-options="fit:true">
+        <div data-options="region:'center', iconCls:'icon-reload', title:'', split:true, border:false, bodyCls:'border_right', width:'100%'">
+            <!-- treegrid表格 -->
+            <table data-toggle="topjui-treegrid"
+                data-options="id:'organizationTreegrid',
+                idField:'id',
+                treeField:'text',
+                url:'/mdata/organization/getListByLevelId?levelId=1',
+                expandUrl:'/mdata/organization/getListByParentId?parentId={id}',
+                childGrid:{
+                    param:'id',
+                    grid:[
+                        {type:'datagrid', id:'organizationPostDg'},
+                    ]
+                }">
+                <thead>
+                    <tr>
+                        <th data-options="field:'id', title:'UUID', checkbox:true"></th>
+                        <th data-options="field:'text', title:'名称'"></th>
+                        <th data-options="field:'typeValue', title:'类型'"></th>
+                        <!--<%&#45;&#45;<th data-options="field:'codeSetId',title:'体系代码',width:100"></th>-->
+                        <!--<th data-options="field:'id',title:'编号',width:100"></th>-->
+                        <!--<th data-options="field:'pid',title:'父级编号',width:100"></th>&#45;&#45;%>-->
+                        <th data-options="field:'levelId', title:'层级', formatter:function(value, row, index){
+                            if (value == 0){
+                                return '顶级';
+                            } else if (value == 1){
+                                return '子级一层';
+                            } else if (value == 2){
+                                return '子级二层';
+                            } else if (value == 3){
+                                return '子级三层';
+                            } else if (value == 4){
+                                return '子级四层';
+                            } else if (value == 5){
+                                return '子级五层';
+                            } else {
+                                return '子级N层';
+                            }
+                        }"></th>
+                        <th data-options="field:'sort', title:'排序'"></th>
+                        <th data-options="field:'code', title:'代码'"></th>
+                        <th data-options="field:'status', title:'状态', formatter:function(value, row, index){
+                            if (value == '1'){
+                                return '<span style=\'color:green\'>启用</span>';
+                            } else if (value == '0') {
+                                return '<span style=\'color:red\'>禁用</span>';
+                            } else {
+                                return '';
+                            }
+                        }"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <!-- 菜单 表格工具栏 -->
+    <div id="organizationTreegrid-toolbar" class="topjui-toolbar">
+        <!--<rbac:hasPermission name="organizationAddDialog">-->
+        <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="menu:'#moreSubMenu',btnCls:'topjui-btn-green',iconCls:'fa fa-plus', hasDownArrow:true">新增</a>
+        <!--</rbac:hasPermission>-->
+
+        <div id="moreSubMenu" class="topjui-toolbar" style="width:100px;">
+            <a href="javascript:void(0)" data-toggle="topjui-menubutton" data-options="method:'openDialog',iconCls:'fa fa-plus',grid:{
+                type:'treegrid',
+                id:'organizationTreegrid',
+                parentIdField:'parentId'
+            },
+            dialog:{
+               id:'organizationAddDialog',
+               href:'/mdata/organization/editRoot?editModel=false',
+               buttonsGroup:[
+                   {text:'保存',url:'/mdata/organization/saveRoot',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+            }">新增根机构</a>
+            <a href="javascript:void(0)"
+               data-toggle="topjui-menubutton"
+               data-options="method:'openDialog',
+               iconCls:'fa fa-plus',
+               grid:{
+                   type:'treegrid',
+                   id:'organizationTreegrid',
+                   parentIdField:'parentId'
+               },
+               parentGrid:{
+                   type:'treegrid',
+                   id:'organizationTreegrid',
+                   param:'codeSetId,parentId:id,levelId',
+                   unselectedMsg:'请先选中要添加菜单的上级菜单！'
+               },
+               dialog:{
+                   id:'organizationAddDialog',
+                   href:'/mdata/organization/edit?editModel=false',
+                   buttonsGroup:[
+                       {text:'保存',url:'/mdata/organization/save',iconCls:'fa fa-plus',handler:'ajaxForm'}
+                   ]
+               }">新增子机构</a>
+        </div>
+        <!--<rbac:hasPermission name="organizationEditDialog">-->
+        <a href="javascript:void(0)"
+           data-toggle="topjui-menubutton"
+           data-options="method:'openDialog',
+           iconCls:'fa fa-pencil',
+           btnCls:'topjui-btn-blue',
+           grid:{
+               type:'treegrid',
+               id:'organizationTreegrid',
+               parentIdField:'parentId'
+           },
+           dialog:{
+               id:'organizationEditDialog',
+               href:'/mdata/organization/edit?editModel=true',
+               url:'/mdata/organization/getDetailByUuid?uuid={id}',
+               buttonsGroup:[
+                   {text:'更新',url:'/mdata/organization/update',iconCls:'fa fa-save',handler:'ajaxForm'}
+               ]
+           }">编辑</a>
+            <!--</rbac:hasPermission>-->
+            <!--<rbac:hasPermission name="/mdata/organization/delete">-->
+            <a href="javascript:void(0)"
+               data-toggle="topjui-menubutton"
+               data-options="method:'doAjax',
+           btnCls:'topjui-btn-red',
+           grid:{
+               type:'treegrid',
+               id:'organizationTreegrid'
+           },
+           url:'/mdata/organization/delete'">删除</a>
+            <!--</rbac:hasPermission>-->
+        <!-- 表格工具栏 -->
+        <div id="organizationPostDg-toolbar" class="topjui-toolbar"
+             data-options="grid:{
+           type:'datagrid',
+           id:'organizationPostDg'
+           }" style="display:none">
+                <!--<rbac:hasPermission name="organizationPostAddDialog">-->
+                <a href="javascript:void(0)"
+                   data-toggle="topjui-menubutton"
+                   data-options="method:'openDialog',
+           btnCls:'topjui-btn-green',
+           extend:'#organizationPostDg-toolbar',
+           parentGrid:{
+               type:'treegrid',
+               id:'organizationTreegrid',
+               param:'orgUuid:id',
+               unselectedMsg:'请先选择产品分类的左侧树形导航中的栏目'
+           },
+           dialog:{
+               id:'organizationPostAddDialog',
+               href:'/mdata/organizationPost/edit',
+               width:950,
+               height:500,
+               editor:[
+                   {type:'ueditor',id:'organizationPostAddContainer',field:'content'}
+               ],
+               buttonsGroup:[
+                   {text:'保存',url:'/mdata/organizationPost/save',iconCls:'fa fa-plus',handler:'ajaxForm'}
+               ]
+           }">新增</a>
+                <!--</rbac:hasPermission>-->
+                <!--<rbac:hasPermission name="organizationPostEditDialog">-->
+                <a href="javascript:void(0)"
+                   data-toggle="topjui-menubutton"
+                   data-options="method:'openDialog',
+           btnCls:'topjui-btn-blue',
+           iconCls:'fa fa-pencil',
+           extend:'#organizationPostDg-toolbar',
+           dialog:{
+               id:'organizationPostEditDialog',
+               href:'/mdata/organizationPost/edit?uuid={id}',
+               url:'/mdata/organizationPost/getDetailByUuid?uuid={id}',
+               width:'950',
+               height:500,
+               editor:[
+                   {type:'ueditor',id:'organizationPostEditContainer',field:'content'}
+               ],
+               buttonsGroup:[
+                   {text:'更新',url:'/mdata/organizationPost/update',iconCls:'fa fa-save',handler:'ajaxForm'}
+               ]
+           }">编辑</a>
+                <!--</rbac:hasPermission>-->
+                <!--<rbac:hasPermission name="/mdata/organizationPost/delete">-->
+                <a href="javascript:void(0)"
+                   data-toggle="topjui-menubutton"
+                   data-options="method:'doAjax',
+            btnCls:'topjui-btn-red',
+               extend:'#organizationPostDg-toolbar',
+               grid:{uncheckedMsg:'请先勾选要删除的指标',param:'id:id'},
+               url:'/mdata/organizationPost/delete'">删除</a>
+                <!--</rbac:hasPermission>-->
+        </div>
+    </div>
+    <!-- 存放具体业务页面需要引入的javascript文件 -->
+
+    <!--<script src="../../static/js/security/mainframe.js"-->
+    <!--th:src="@{/js/security/mainframe.js}"></script>-->
+</body>
+</html>

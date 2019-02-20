@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.water_management.modules.dao.sys.AuthGroupDao">
+
+    <resultMap id="authGroupMap" type="com.qh.water_management.modules.entity.sys.AuthGroup">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parentId"/>
+        <result property="text" column="text"/>
+        <result property="levelId" column="levelId"/>
+        <result property="menuId" column="menuId"/>
+        <result property="code" column="code"/>
+        <result property="codeSetId" column="codeSetId"/>
+        <result property="sort" column="sort"/>
+        <result property="state" column="state"/>
+        <result property="status" column="status"/>
+        <result property="createId" column="createId"/>
+        <result property="updateId" column="updateId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="remark" column="remark"/>
+        <result property="creatorOrgId" column="creatorOrgId"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, parentId, text, levelId, menuId, code, codeSetId, sort, state, status, createId, updateId, createTime, updateTime, remark, creatorOrgId
+    </sql>
+
+    <select id="getListByCodeSetIdAndLevelId" parameterType="map" resultType="com.qh.water_management.modules.entity.sys.AuthGroup">
+        select <include refid="Base_Column_List"/> from sys_auth_group
+        where codeSetId = #{codeSetId} and levelId = #{levelId}
+    </select>
+
+    <select id="getListByParentId" resultType="com.qh.water_management.modules.entity.sys.AuthGroup">
+        select <include refid="Base_Column_List"/> from sys_auth_group where 1=1 and parentId = #{parentId}
+    </select>
+
+    <select id="getDetailByUuid" parameterType="string" resultType="map">
+       select <include refid="Base_Column_List"/> from sys_auth_group where id = #{uuid}
+    </select>
+
+    <select id="getListByLevelId" resultType="java.util.Map">
+        select <include refid="Base_Column_List"/> from sys_auth_group where levelId = #{levelId} order by sort
+    </select>
+
+    <insert id="save" parameterType="com.qh.water_management.modules.entity.sys.AuthGroup">
+        insert into sys_auth_group (id, parentId, text, levelId, menuId, code, codeSetId, sort, state, status, createId, updateId, createTime, updateTime, remark, creatorOrgId)
+        values(#{id}, #{parentId}, #{text}, #{levelId}, #{menuId}, #{code}, #{codeSetId}, #{sort}, #{state}, #{status}, #{createId}, #{updateId}, #{createTime}, #{updateTime}, #{remark}, #{creatorOrgId})
+    </insert>
+
+    <update id="update" parameterType="com.qh.water_management.modules.entity.sys.AuthGroup">
+        update sys_auth_group
+        <set>
+            <if test="parentId != null">parentId = #{parentId},</if>
+            <if test="text != null">text = #{text},</if>
+            <if test="levelId != null">levelId = #{levelId},</if>
+            <if test="menuId != null">menuId = #{menuId},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="codeSetId != null">codeSetId = #{codeSetId},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateId != null">updateId = #{updateId},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from sys_auth_group where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

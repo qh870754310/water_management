@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.water_management.modules.dao.sys.DicItemDao">
+
+    <resultMap id="dicItemMap" type="com.qh.water_management.modules.entity.sys.DictionaryDetail">
+        <id property="id" column="id"/>
+        <result property="puuid" column="puuid"/>
+        <result property="text" column="text"/>
+        <result property="value" column="value"/>
+        <result property="sort" column="sort"/>
+        <result property="remark" column="remark"/>
+        <result property="selected" column="selected"/>
+        <result property="createId" column="createId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateId" column="updateId"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="creatorOrgId" column="creatorOrgId"/>
+        <result property="language" column="language"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, puuid, text, `value`, selected, sort, remark, createId, createTime, updateId, updateTime, creatorOrgId, `language`
+    </sql>
+
+    <select id="queryList" parameterType="map" resultMap="dicItemMap">
+        select <include refid="Base_Column_List"/> from sys_data_dict_dtl
+        where 1=1
+        <if test="puuid != null and puuid != ''">
+            and puuid = #{puuid}
+        </if>
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+        <if test="advanceFilter != null and advanceFilter != ''">
+            ${advanceFilter}
+        </if>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from sys_data_dict_dtl where 1=1
+        <if test="puuid != null and puuid != ''">
+            and puuid = #{puuid}
+        </if>
+        <if test="filterRules != null and filterRules != ''">
+            ${filterRules}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="com.qh.water_management.modules.entity.sys.DictionaryDetail">
+        insert into sys_data_dict_dtl (id, puuid, text, `value`, selected, sort, remark, createId, updateId, createTime, updateTime, creatorOrgId, language)
+        values(#{id}, #{puuid}, #{text}, #{value}, #{selected}, #{sort}, #{remark}, #{createId}, #{updateId}, #{createTime}, #{updateTime}, #{creatorOrgId}, #{language})
+    </insert>
+
+    <update id="update" parameterType="com.qh.water_management.modules.entity.sys.DictionaryDetail">
+        update sys_data_dict_dtl
+        <set>
+            <if test="puuid != null">puuid = #{puuid},</if>
+            <if test="text != null">text = #{text},</if>
+            <if test="value != null">`value` = #{value},</if>
+            <if test="selected != null">selected = #{selected},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateId != null">updateId = #{updateId},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="language != null">`language` = #{language}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from sys_data_dict_dtl where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

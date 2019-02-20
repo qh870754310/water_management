@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.water_management.modules.dao.sys.SysAuthDataDao">
+
+    <resultMap id="authDataMap" type="com.qh.water_management.modules.entity.sys.AuthData">
+        <id property="id" column="id"/>
+        <result property="parentId" column="parentId"/>
+        <result property="text" column="text"/>
+        <result property="orgId" column="orgId"/>
+        <result property="sort" column="sort"/>
+        <result property="levelId" column="levelId"/>
+        <result property="del" column="del"/>
+        <result property="status" column="status"/>
+        <result property="state" column="state"/>
+        <result property="createId" column="createId"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateId" column="updateId"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="creatorOrgId" column="creatorOrgId"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, parentId, text, orgId, sort, levelId, del, status, state, createId, createTime, updateId, updateTime, creatorOrgId, remark
+    </sql>
+
+    <select id="getListByLevelId" parameterType="Integer" resultType="java.util.Map">
+        select <include refid="Base_Column_List"/> from sys_auth_data where levelId = #{levelId} order by sort
+    </select>
+
+    <select id="getListByParentId" resultType="java.util.Map">
+        select <include refid="Base_Column_List"/> from sys_auth_data where parentId = #{parentId} order by sort
+    </select>
+
+    <select id="getDetailByUuid" parameterType="string" resultType="map">
+        select <include refid="Base_Column_List"/> from sys_auth_data where id = #{uuid}
+    </select>
+
+    <insert id="save" parameterType="com.qh.water_management.modules.entity.sys.AuthData">
+        insert into sys_auth_data (id, parentId, text, orgId, sort, levelId, del, status, state, createId, createTime, updateId, updateTime, remark, creatorOrgId)
+        values(#{id}, #{parentId}, #{text}, #{orgId}, #{sort}, #{levelId}, #{del}, #{status}, #{state}, #{createId}, #{createTime}, #{updateId}, #{updateTime}, #{remark}, #{creatorOrgId})
+    </insert>
+
+    <update id="update" parameterType="com.qh.water_management.modules.entity.sys.AuthData">
+        update sys_auth_data
+        <set>
+           <if test="parentId != null">parentId = #{parentId},</if>
+           <if test="text != null">text = #{text},</if>
+           <if test="orgId != null">orgId = #{orgId},</if>
+           <if test="sort != null">sort = #{sort},</if>
+           <if test="levelId != null">levelId = #{levelId},</if>
+           <if test="status != null">status = #{status},</if>
+           <if test="del != null">del = #{del},</if>
+           <if test="state != null">state = #{state},</if>
+           <if test="updateId != null">updateId = #{updateId},</if>
+           <if test="updateTime != null">updateTime = #{updateTime},</if>
+           <if test="remark != null">remark = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from sys_auth_data where id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
